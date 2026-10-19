@@ -1,0 +1,19 @@
+{
+  "vacancySearchResult": {
+    "totalResults": 3234,
+    "vacancies": [
+      {
+        "vacancyId": 138480763,
+        "name": "AI/LLM Engineer в GenAI Evaluation",
+        "creationTime": "2026-10-14T14:40:03.468+03:00",
+        "online_users_count": 41
+      },
+      {
+        "vacancyId": 138483274,
+        "name": "MlOps inference engineer",
+        "creationTime": "2026-10-14T15:21:58.449+03:00",
+        "online_users_count": 17
+      }
+    ]
+  }
+}

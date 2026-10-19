@@ -1,0 +1,31 @@
+{
+  "vacancySearchResult": {
+    "totalResults": 3240,
+    "vacancies": [
+      {
+        "vacancyId": 138355705,
+        "name": "Data Scientist Middle/Senior Scoring",
+        "creationTime": "2026-10-12T10:17:18.840+03:00",
+        "responsesCount": 773,
+        "totalResponsesCount": 870,
+        "online_users_count": 14
+      },
+      {
+        "vacancyId": 138611457,
+        "name": "Специалист по автоматизации и сопровождению систем (Jira)",
+        "creationTime": "2026-10-19T13:41:39.226+03:00",
+        "responsesCount": 14,
+        "totalResponsesCount": 58,
+        "online_users_count": 127
+      },
+      {
+        "vacancyId": 137589196,
+        "name": "Педагог по программированию в онлайн-школу Юайти",
+        "creationTime": "2026-09-21T13:54:41.996+03:00",
+        "responsesCount": 992,
+        "totalResponsesCount": 1057,
+        "online_users_count": 8
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "vacancySearchResult": {
+    "totalResults": 3234,
+    "vacancies": [
+      {
+        "vacancyId": 138480763,
+        "name": "AI/LLM Engineer в GenAI Evaluation",
+        "creationTime": "2026-10-14T14:40:03.468+03:00",
+        "responsesCount": 20,
+        "totalResponsesCount": 1042,
+        "online_users_count": 41
+      },
+      {
+        "vacancyId": 137535328,
+        "name": "Стажер-инженер технологий машинного обучения",
+        "creationTime": "2026-09-18T16:41:33.210+03:00",
+        "responsesCount": 0,
+        "totalResponsesCount": 1484,
+        "online_users_count": 18
+      },
+      {
+        "vacancyId": 138483274,
+        "name": "MlOps inference engineer",
+        "creationTime": "2026-10-14T15:21:58.449+03:00",
+        "responsesCount": 12,
+        "totalResponsesCount": 489,
+        "online_users_count": 17
+      },
+      {
+        "vacancyId": 138605303,
+        "name": "Senior Python Backend Developer",
+        "creationTime": "2026-10-19T12:23:09.147+03:00",
+        "responsesCount": 106,
+        "totalResponsesCount": 119,
+        "online_users_count": 146
+      }
+    ]
+  }
+}
