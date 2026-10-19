@@ -36,29 +36,60 @@ Firefox-расширение, которое показывает на hh.ru с�
 npm install
 npm test           # разбор данных на реальных урезанных образцах
 npm run typecheck
-npm run build      # -> dist/
-npm run lint       # сборка + web-ext lint
+npm run build      # -> dist/ (версия в dist/manifest.json берётся из package.json)
+npm run lint       # сборка + web-ext lint (--self-hosted: обновления раздаются не через AMO)
 ```
+
+Версия расширения задаётся только в `package.json`. В `src/manifest.json` поля `version` нет: сборка добавляет его сама.
 
 ## Установка
 
-Вариант 1, временная установка одним файлом (подходит и для браузеров в песочнице Flatpak/Snap):
+1. Скачать `hh-helper-ext-<версия>.xpi` из [последнего релиза](https://github.com/AlexandrLo/hh-helper-ext/releases/latest).
+2. Открыть файл в Firefox или Zen (или перетащить его в окно браузера) и подтвердить установку.
 
-1. `npm run package`. Получится `web-ext-artifacts/hh-helper-ext.xpi`.
+Пакет подписан Mozilla (канал unlisted, в каталоге addons.mozilla.org расширения нет), поэтому ставится навсегда и остаётся после перезапуска.
+
+Обновления приходят сами: браузер проверяет `updates.json` из последнего релиза (`update_url` в манифесте). Проверить вручную можно в `about:addons` → шестерёнка → «Проверить наличие обновлений».
+
+Если раньше расширение было загружено временно (id `hh-helper-ext@local`), удалите его: у подписанной сборки другой id, и это будет второе расширение.
+
+## Разработка
+
+Временная установка одним файлом (подходит и для браузеров в песочнице Flatpak/Snap):
+
+1. `npm run package`. Получится неподписанный `web-ext-artifacts/hh-helper-ext.xpi`.
 2. Открыть `about:debugging#/runtime/this-firefox`.
 3. «Загрузить временное дополнение…» → выбрать `web-ext-artifacts/hh-helper-ext.xpi`.
 
 Почему одним файлом: браузер из Flatpak видит только файл, выбранный в диалоге. Если выбрать `dist/manifest.json`, соседние `background.js` и `content.js` ему недоступны, и расширение не работает (`Loading failed for the <script> … background.js`).
 
-Временное дополнение удаляется при перезапуске браузера. После изменений повторите `npm run package` и загрузите `.xpi` заново.
+Временное дополнение удаляется при перезапуске браузера. После изменений повторите `npm run package` и загрузите `.xpi` заново. Без песочницы можно выбрать и `dist/manifest.json` после `npm run build`.
 
-Без песочницы можно выбрать и `dist/manifest.json` после `npm run build`.
-
-Вариант 2, отдельный профиль:
+Отдельный профиль:
 
 ```sh
 npm start          # сборка + web-ext run на странице поиска
 ```
+
+## Выпуск версии
+
+Workflow `.github/workflows/release.yml` запускается на каждый push в `main`:
+
+1. `npm test`, `npm run typecheck`, `npm run lint`. Если что-то падает, релиза нет.
+2. Если релиз `v<версия из package.json>` уже есть, на этом всё.
+3. Иначе: сборка, подпись в AMO (`web-ext sign --channel unlisted`, вместе с исходниками из `git archive`), релиз `v<версия>` с `hh-helper-ext-<версия>.xpi` и `updates.json`.
+
+Чтобы выпустить версию, поднимите `version` в `package.json` (например, `npm version patch --no-git-tag-version`) и запушьте в `main`. Коммиты без смены версии только проверяются.
+
+Однократная настройка: на [addons.mozilla.org](https://addons.mozilla.org/developers/addon/api/key/) создать API-ключ и добавить в репозиторий (Settings → Secrets and variables → Actions) секреты `AMO_JWT_ISSUER` (JWT issuer) и `AMO_JWT_SECRET` (JWT secret).
+
+Если подпись прошла, а релиз не создался: повторный запуск не поможет, потому что AMO не подписывает одну версию дважды. Подписанный `.xpi` и `updates.json` лежат в артефакте прогона `hh-helper-ext-<версия>`. Скачайте его и создайте релиз вручную:
+
+```sh
+gh release create v<версия> hh-helper-ext-<версия>.xpi updates.json --latest --generate-notes
+```
+
+Или просто поднимите patch-версию и запушьте ещё раз.
 
 ## Проверено
 

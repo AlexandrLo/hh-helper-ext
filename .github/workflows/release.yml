@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+# Never run two releases at once: AMO must not receive the same version twice.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 25
+          cache: npm
+
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run lint
+
+      - name: Check whether this version is already released
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if gh release view "v$version" > /dev/null 2>&1; then
+            echo "Release v$version already exists, nothing to publish."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Sign with AMO (unlisted)
+        if: steps.version.outputs.release == 'true'
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          git archive --format=zip -o source.zip HEAD
+          npx web-ext sign -s dist -a signed --channel unlisted \
+            --upload-source-code source.zip --approval-timeout 900000
+
+      - name: Prepare release files
+        if: steps.version.outputs.release == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          shopt -s nullglob
+          signed=(signed/*.xpi)
+          if [ "${#signed[@]}" -ne 1 ]; then
+            echo "Expected exactly one signed .xpi, got: ${signed[*]}" >&2
+            exit 1
+          fi
+          mkdir release
+          mv "${signed[0]}" "release/hh-helper-ext-$VERSION.xpi"
+          node scripts/updates-json.ts > release/updates.json
+
+      # Kept before the release step: AMO will not sign this version again,
+      # so if publishing fails the signed files are recovered from here.
+      - uses: actions/upload-artifact@v7
+        if: steps.version.outputs.release == 'true'
+        with:
+          name: hh-helper-ext-${{ steps.version.outputs.version }}
+          path: release/
+
+      - name: Publish GitHub release
+        if: steps.version.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "v$VERSION" release/* \
+            --target "$GITHUB_SHA" --title "v$VERSION" --latest --generate-notes

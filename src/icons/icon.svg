@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Geometry sits on an 8-unit grid: at 16x16 px every stroke and gap is exactly 1 px. -->
+  <rect width="128" height="128" rx="24" fill="#D6001C"/>
+  <path fill="#fff" d="M8 24H16V104H8ZM8 72A16 16 0 0 1 40 72V104H32V72A8 8 0 0 0 16 72Z"/>
+  <path fill="#fff" d="M48 24H56V104H48ZM48 72A16 16 0 0 1 80 72V104H72V72A8 8 0 0 0 56 72Z"/>
+  <path fill="#fff" d="M88 24H96V104H88ZM88 72A16 16 0 0 1 120 72V104H112V72A8 8 0 0 0 96 72Z"/>
+</svg>

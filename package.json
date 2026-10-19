@@ -8,7 +8,7 @@
     "build": "node scripts/build.ts",
     "typecheck": "tsc --noEmit",
     "test": "node --test \"test/**/*.test.ts\"",
-    "lint": "npm run build && web-ext lint -s dist",
+    "lint": "npm run build && web-ext lint -s dist --self-hosted",
     "start": "npm run build && web-ext run -s dist --url https://hh.ru/search/vacancy?text=python",
     "package": "npm run build && web-ext build -s dist -a web-ext-artifacts -n hh-helper-ext.xpi --overwrite-dest"
   },

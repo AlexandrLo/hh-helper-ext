@@ -1,5 +1,5 @@
 import { build } from "esbuild";
-import { copyFile, mkdir, rm } from "node:fs/promises";
+import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 
 const outdir = "dist";
 
@@ -18,4 +18,12 @@ await build({
   logLevel: "info",
 });
 
-await copyFile("src/manifest.json", `${outdir}/manifest.json`);
+// package.json is the only source of the extension version.
+const { version } = JSON.parse(await readFile("package.json", "utf8"));
+const manifest = JSON.parse(await readFile("src/manifest.json", "utf8"));
+await writeFile(
+  `${outdir}/manifest.json`,
+  JSON.stringify({ ...manifest, version }, null, 2) + "\n",
+);
+
+await cp("src/icons", `${outdir}/icons`, { recursive: true });

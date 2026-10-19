@@ -1,12 +1,16 @@
 {
   "manifest_version": 3,
   "name": "hh helper: response counters",
-  "version": "0.1.0",
   "description": "Shows vacancy response counters that hh.ru already sends to the browser.",
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
   "browser_specific_settings": {
     "gecko": {
-      "id": "hh-helper-ext@local",
+      "id": "hh-helper-ext@alexandrlo.github.io",
       "strict_min_version": "142.0",
+      "update_url": "https://github.com/AlexandrLo/hh-helper-ext/releases/latest/download/updates.json",
       "data_collection_permissions": {
         "required": ["none"]
       }
