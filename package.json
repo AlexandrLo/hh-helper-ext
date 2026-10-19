@@ -1,6 +1,6 @@
 {
   "name": "hh-helper-ext",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Firefox extension: shows vacancy response counters that hh.ru already sends to the browser",
   "type": "module",
